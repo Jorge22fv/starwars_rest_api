@@ -8,10 +8,11 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, People
 #from models import Person
 
-app = Flask(__name__)
+#elementos de configuración 
+app = Flask(__name__) #instanciar una aplicación Flask
 app.url_map.strict_slashes = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_CONNECTION_STRING')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -38,6 +39,27 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+#nuestras rutas
+@app.route('/people', methods=['GET'])
+def getPeople():
+    all_people = People.query.all()
+    arreglo_people = list(map(lambda x:x.serialize(), all_people))
+    
+    
+    return jsonify({"Resultados": arreglo_people})
+
+
+@app.route('/people/<int:people_id>', methods=['GET'])
+def getPeopleID(people_id):
+    one_people = People.query.get(people_id)
+    if one_people:
+        return jsonify({"personaje": one_people.serialize()})
+    else:
+        return "error, no encontrado"
+
+
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
