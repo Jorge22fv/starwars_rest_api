@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -14,10 +15,11 @@ class User(db.Model):
             "email": self.email,
             # do not serialize the password, its a security breach
         }
-#pipenv run migrate 
-#pipenv run upgrade
-#-> efectuar cambios en la base de datos
-#mysql;  use example; show tables; exit;
+# pipenv run migrate
+# pipenv run upgrade
+# -> efectuar cambios en la base de datos
+# mysql;  use example; show tables; exit;
+
 
 class People(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
@@ -34,4 +36,36 @@ class People(db.Model):
             "height": self.height,
             "mass": self.mass
             # do not serialize the password, its a security breach
+        }
+
+
+class Planets(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), unique=True, nullable=False)
+    population = db.Column(db.Integer, unique=False, nullable=True)
+    climate = db.Column(db.String(20), unique=False, nullable=True)
+    gravity = db.Column(db.Float, unique=False, nullable=True)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "population": self.population,
+            "climate": self.climate,
+            "gravity": self.gravity
+        }
+
+
+class Fav_people(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    uid_people = db.Column(db.Integer, db.ForeignKey('people.uid'))
+    id_user = db.Column(db.Integer, db.ForeignKey('user.id'))
+    people = db.relationship('People')
+    user = db.relationship('User')
+
+    def serialize(self):
+        return {
+            "uid_people": self.uid_people,
+            "id_user": self.id_user,
+            "id": self.id,
         }
