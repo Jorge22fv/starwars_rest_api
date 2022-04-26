@@ -39,6 +39,21 @@ class People(db.Model):
         }
 
 
+class Fav_people(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    uid_people = db.Column(db.Integer, db.ForeignKey('people.uid'))
+    id_user = db.Column(db.Integer, db.ForeignKey('user.id'))
+    people = db.relationship('People')
+    user = db.relationship('User')
+
+    def serialize(self):
+        return {
+            "uid_people": self.uid_people,
+            "id_user": self.id_user,
+            "id": self.id,
+        }
+
+
 class Planets(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
@@ -56,16 +71,24 @@ class Planets(db.Model):
         }
 
 
-class Fav_people(db.Model):
+class Fav_planets(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    uid_people = db.Column(db.Integer, db.ForeignKey('people.uid'))
+    id_planets = db.Column(db.Integer, db.ForeignKey('planets.id'))
     id_user = db.Column(db.Integer, db.ForeignKey('user.id'))
-    people = db.relationship('People')
-    user = db.relationship('User')
+    id_planets = db.relationship('Planets')
+    id_user =  db.relationship('User')
 
     def serialize(self):
-        return {
-            "uid_people": self.uid_people,
-            "id_user": self.id_user,
+        return{
             "id": self.id,
+            "id_planets": self.id_planets,
+            "id_user": self.id_user
+
         }
+
+
+
+
+
+
+

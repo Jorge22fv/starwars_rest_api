@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, People, Planets, Fav_people
+from models import db, User, People, Planets, Fav_people, Fav_planets
 #from models import Person
 
 # elementos de configuración
@@ -61,29 +61,12 @@ def getPeopleID(people_id):
         return "error, no encontrado"
 
 
-@app.route('/planets', methods=['GET'])
-def getPlanets():
-    all_planets = Planets.query.all()
-    planets_arr = list(map(lambda x: x.serialize(), all_planets))
-
-    return jsonify({"Resultados": planets_arr})
-
-
-@app.route('/planets/<int:planets_id>', methods=['GET'])
-def getPlanetsID(planets_id):
-    one_planet = Planets.query.get(planets_id)
-    if one_planet:
-        return jsonify({"planet": one_planet.serialize()})
-    else:
-        return "error, no encontrado"
-
-
 @app.route('/fav_people', methods=['GET'])
 def getFav_people():
-    all_favp = Fav_people.query.all()
-    favp_arr = list(map(lambda x: x.serialize(), all_favp))
+    all_favpeople = Fav_people.query.all()
+    favpeople_arr = list(map(lambda x: x.serialize(), all_favpeople))
 
-    return jsonify({"Resultados": favp_arr})
+    return jsonify({"Resultados": favpeople_arr})
 
 
 @app.route('/favorite/people/<int:people_id>', methods=['POST'])
@@ -115,6 +98,65 @@ def deleteFavPeople(people_id):
     db.session.commit()
 
     return('todo salio ok')
+
+
+@app.route('/planets', methods=['GET'])
+def getPlanets():
+    all_planets = Planets.query.all()
+    planets_arr = list(map(lambda x: x.serialize(), all_planets))
+
+    return jsonify({"Resultados": planets_arr})
+
+
+@app.route('/planets/<int:planets_id>', methods=['GET'])
+def getPlanetsID(planets_id):
+    one_planet = Planets.query.get(planets_id)
+    if one_planet:
+        return jsonify({"planet": one_planet.serialize()})
+    else:
+        return "error, no encontrado"
+
+
+@app.route('/fav_planets', methods=['GET'])
+def getFav_planets():
+    all_favplanets = Fav_planets.query.all()
+    favplanets_arr = list(map(lambda x: x.serialize(), all_favplanets))
+
+    return jsonify({"Resultados": favplanets_arr})
+
+"""
+@app.route('/favorite/planets/<int:planets_id>', methods=['POST'])
+def addFavPlanet(planets_id):
+
+    user = request.get_json()  
+    if checkUser:
+        newFavPlanet = Fav_planets()
+        newFavPlanet.id_user = user['id']
+        newFavPlanet.id_planets = planets_id
+
+        db.session.add(newFavPlanet)
+        db.session.commit()
+        return("todo salió bien :D")
+    else:
+        return("user no existe")
+
+
+@app.route('/favorite/planets/<int:planets_id>', methods=['DELETE'])
+def deleteFavPlanet(planets_id):
+    user = request.get_json()  # {id:1}
+    allFavsPlanets = Fav_planets.query.filter_by(
+        id_user=user['id'], id_planets=planets_id).all()
+
+    for i in allFavsPlanets:
+        db.session.delete(i)
+    db.session.commit()
+
+    return('todo salio ok')
+
+
+"""
+
+
 
 
 # this only runs if `$ python src/main.py` is executed
