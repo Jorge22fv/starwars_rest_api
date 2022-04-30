@@ -116,7 +116,6 @@ def getPlanetsID(planets_id):
     else:
         return "error, no encontrado"
 
-
 @app.route('/fav_planets', methods=['GET'])
 def getFav_planets():
     all_favplanets = Fav_planets.query.all()
@@ -124,7 +123,6 @@ def getFav_planets():
 
     return jsonify({"Resultados": favplanets_arr})
 
-"""
 @app.route('/favorite/planets/<int:planets_id>', methods=['POST'])
 def addFavPlanet(planets_id):
 
@@ -154,12 +152,10 @@ def deleteFavPlanet(planets_id):
     return('todo salio ok')
 
 
-"""
-
-
 
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=PORT, debug=False)
+

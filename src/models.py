@@ -70,25 +70,17 @@ class Planets(db.Model):
             "gravity": self.gravity
         }
 
-
 class Fav_planets(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_planets = db.Column(db.Integer, db.ForeignKey('planets.id'))
     id_user = db.Column(db.Integer, db.ForeignKey('user.id'))
-    id_planets = db.relationship('Planets')
-    id_user =  db.relationship('User')
-
+    planets = db.relationship('Planets')
+    user =  db.relationship('User')
+    
     def serialize(self):
         return{
             "id": self.id,
             "id_planets": self.id_planets,
             "id_user": self.id_user
-
         }
-
-
-
-
-
-
 
